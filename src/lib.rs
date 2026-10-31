@@ -34,7 +34,7 @@ pub fn default_plugins() -> PluginGroupBuilder {
         })
         .set(WindowPlugin {
             primary_window: Some(Window {
-                present_mode: default_present_mode(),
+                present_mode: PresentMode::AutoVsync,
                 // Render into the page's canvas (see ndex.html)
                 #[cfg(target_arch = "wasm32")]
                 canvas: Some("#bevy".into()),
@@ -49,14 +49,6 @@ pub fn default_plugins() -> PluginGroupBuilder {
     let plugins = plugins.add(blender::plugin);
 
     plugins
-}
-
-const fn default_present_mode() -> PresentMode {
-    if cfg!(target_os = "linux") {
-        PresentMode::Mailbox // the default seems to be broken on Linux
-    } else {
-        PresentMode::AutoVsync
-    }
 }
 
 /// after [`default_plugins`].
