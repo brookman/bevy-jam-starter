@@ -54,7 +54,7 @@ fn unique_temp_glb(blend: &Path) -> PathBuf {
     static COUNTER: AtomicU64 = AtomicU64::new(0);
     let stem = blend.file_stem().unwrap_or_default().to_string_lossy();
     std::env::temp_dir().join(format!(
-        "bevy-starter-{}-{}-{stem}.glb",
+        "bevy-jam-starter-{}-{}-{stem}.glb",
         std::process::id(),
         COUNTER.fetch_add(1, Ordering::Relaxed),
     ))

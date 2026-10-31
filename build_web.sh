@@ -1,10 +1,10 @@
 #!/bin/sh
-# Builds the web (WebGPU) version into target/web/ and target/bevy-starter-web.zip.
+# Builds the web (WebGPU) version into target/web/ and target/bevy-jam-starter-web.zip.
 # Serve the folder over HTTP, e.g.
 #   python3 -m http.server -d target/web 8080
 set -eu
 
-NAME=bevy-starter
+NAME=bevy-jam-starter
 OUT=target/web
 WASM=target/wasm32-unknown-unknown/web/$NAME.wasm
 
