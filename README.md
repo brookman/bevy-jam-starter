@@ -6,6 +6,7 @@ The contents were mostly compiled from private projects and the official [Bevy e
 ## Blender plugin
 - Watches .blend files for changes and converts them to .glb by invoking Blender.
 - Bevy then hot-reloads the .glb file.
+- Derived .glb files are not commited.
 - Support for Skein.
 
 ## Debug plugin
@@ -33,14 +34,14 @@ A super basic editor-like UI.
 
 ## Skein
 - Uses [Bevy Skein](https://bevyskein.dev/) to load Bevy components from Blender.
-- Requires Blender addon, see: https://bevyskein.dev/docs/installation
-- The physics objects (including their Avian components) are imported from Blender.
+- Requires the Skein Blender addon, see: https://bevyskein.dev/docs/installation
+- The physics objects `cube` and `ball` (including their Avian components) are imported from Blender.
 
 ## Build
 - The project should build for MacOS, Linux and Web (requires WebGPU)
 - Build scripts for `release` and `web`.
-- The web bundle size is reduces by using `wasm-opt`.
-- A Tracy setup for profiling.
+- The web bundle size is reduced by using `wasm-opt`.
+- A Tracy setup for profiling. (`tracy_debug.sh` and `tracy_release.sh`)
 - Uses a Nix dev shell for trayc and binaryen (wasm-opt).
 
 ## Misc
