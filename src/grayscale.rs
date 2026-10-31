@@ -15,12 +15,10 @@ pub fn plugin(app: &mut App) {
         .add_observer(toggle);
 }
 
-
 #[derive(Component, ExtractComponent, ShaderType, Clone, Copy)]
 #[extract_app(RenderApp)]
 pub struct Grayscale {
     /// 0 = original colors, 1 = fully gray
-
     pub strength: f32,
 }
 

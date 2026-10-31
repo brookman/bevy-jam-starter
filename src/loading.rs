@@ -1,7 +1,6 @@
 use bevy::prelude::*;
 use bevy_asset_loader::prelude::*;
 
-
 pub fn plugin(app: &mut App) {
     app.init_state::<AppState>()
         .add_loading_state(

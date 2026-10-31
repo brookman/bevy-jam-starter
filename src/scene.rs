@@ -144,4 +144,3 @@ fn apply_config(config: Res<SceneConfig>, mut lights: Query<&mut PointLight, Wit
         light.intensity = config.light_intensity;
     }
 }
-

@@ -40,7 +40,6 @@ struct BallAssets {
 #[type_path = "game"]
 pub struct Ball;
 
-
 #[derive(Component, Reflect, Debug)]
 #[reflect(Component, Default)]
 #[type_path = "game"]

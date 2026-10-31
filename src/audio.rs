@@ -7,7 +7,6 @@ use bevy::audio::Volume;
 use bevy::prelude::*;
 use bevy_asset_loader::prelude::*;
 
-
 const MIN_IMPACT_STRENGTH: f32 = 1.0;
 const FULL_VOLUME_STRENGTH: f32 = 25.0;
 

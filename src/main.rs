@@ -12,6 +12,9 @@ fn main() -> AppExit {
     }
 
     App::new()
-        .add_plugins((bevy_jam_starter::default_plugins(), bevy_jam_starter::plugin))
+        .add_plugins((
+            bevy_jam_starter::default_plugins(),
+            bevy_jam_starter::plugin,
+        ))
         .run()
 }

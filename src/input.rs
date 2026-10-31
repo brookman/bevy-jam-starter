@@ -82,7 +82,6 @@ fn spawn(mut commands: Commands) {
     });
 }
 
-
 fn update_context_activity(
     mut commands: Commands,
     captured: Res<KeyboardCaptured>,
