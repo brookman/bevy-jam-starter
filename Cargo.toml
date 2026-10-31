@@ -1,0 +1,78 @@
+[package]
+name = "bevy-jam-starter"
+version = "0.1.0"
+edition = "2024"
+rust-version = "1.97"
+
+
+[features]
+dev = [
+    "bevy/dynamic_linking",
+    "bevy/debug",
+    "bevy/file_watcher",
+    "bevy/embedded_watcher",
+    "dep:bevy-inspector-egui",
+    "dep:bevy_egui",
+    "dep:egui_dock",
+    # Lets the Blender addon fetch the type registry from the running game (BRP on localhost).
+    "bevy_skein/presets",
+]
+tracy = ["bevy/trace_tracy"]
+
+[dependencies]
+# `asset_processor` is only switched on in debug builds, see `default_plugins`.
+bevy = { version = "0.20.0", features = ["pan_orbit_camera", "asset_processor"] }
+bevy-inspector-egui = { version = "0.38.0", optional = true }
+egui_dock = { version = "0.21", optional = true }
+# Only here to enable `picking`; keep in sync with bevy-inspector-egui's version.
+bevy_egui = { version = "0.43.1", default-features = false, features = ["picking"], optional = true }
+thiserror = "2.0.18"
+blocking = "1.6"
+serde = { version = "1", features = ["derive"] }
+# Reads components stored in glTF by the skein Blender addon. BRP only via `dev`.
+bevy_skein = { version = "0.7", default-features = false }
+avian3d = "0.8"
+fastrand = "2"
+bevy_enhanced_input = "0.27"
+bevy_asset_loader = "0.28"
+
+
+[target.'cfg(target_arch = "wasm32")'.dependencies]
+# Web builds use WebGPU: WebGL2 can't run SSAO (compute shaders) or TAA.
+bevy = { version = "0.20.0", features = ["webgpu"] }
+# Seed from the browser's crypto API; otherwise every page load gets the same sequence.
+fastrand = { version = "2", features = ["js"] }
+
+[profile.dev]
+opt-level = 1
+
+[profile.dev.package."*"]
+opt-level = 3
+
+# Slow, fully optimized build for shipping; used by build_release.sh.
+[profile.dist]
+inherits = "release"
+codegen-units = 1
+lto = "thin"
+
+# Size-optimized web build; used by build_web.sh. Full LTO + "z" cut the
+# .wasm from 43 MB to 28 MB (gzip 11.5 -> 8.7 MB) at ~2.5x build time.
+[profile.web]
+inherits = "dist"
+opt-level = "z"
+lto = "fat"
+
+
+[lints.rust]
+unsafe_code = "forbid"
+
+[lints.clippy]
+pedantic = { level = "warn", priority = -1 }
+nursery = { level = "warn", priority = -1 }
+
+too_many_arguments = "allow"
+type_complexity = "allow"
+needless_pass_by_value = "allow"
+
+missing_errors_doc = "allow"
+missing_panics_doc = "allow"

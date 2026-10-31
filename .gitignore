@@ -1,0 +1,8 @@
+/target
+
+.idea/
+.vscode/
+
+*.blend[0-9]
+
+/imported_assets/

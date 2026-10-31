@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="data:,">
+  <title>bevy-jam-starter</title>
+  <style>
+
+    html, body {
+      margin: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: #2b2c2f;
+      color: #ccc;
+      font-family: system-ui, sans-serif;
+    }
+
+    canvas {
+      display: block;
+      width: 100%;
+      height: 100%;
+      outline: none;
+    }
+
+    #status {
+      position: fixed;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+      text-align: center;
+      padding: 1rem;
+    }
+
+    #status[hidden] { display: none; }
+    .spinner {
+      width: 48px;
+      height: 48px;
+      border: 5px solid currentColor;
+      border-color: currentColor transparent;
+      border-radius: 50%;
+      animation: spin 1.2s linear infinite;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+    
+    #status a { color: inherit; }
+
+  </style>
+</head>
+<body>
+  <canvas id="bevy" tabindex="0"></canvas>
+
+  <div id="status">
+    <div class="spinner"></div>
+    <p>Loading...</p>
+  </div>
+
+  <script type="module">
+    import init from "./bevy-starter.js";
+
+    const status = document.getElementById("status");
+
+    function showUnsupported() {
+      status.innerHTML = `
+        <h2>WebGPU is not available</h2>
+        <p>This game needs a browser with WebGPU support, such as a current
+        Chrome, Edge, Safari (26+) or Firefox (141+).</p>
+        <p><a href="https://caniuse.com/webgpu">Check browser support</a></p>`;
+    }
+
+    async function hasWebGpu() {
+      if (!navigator.gpu) return false;
+      try {
+        return (await navigator.gpu.requestAdapter()) !== null;
+      } catch {
+        return false;
+      }
+    }
+
+    if (!(await hasWebGpu())) {
+      showUnsupported();
+    } else {
+      try {
+        await init();
+      } catch (error) {
+        // winit ends `run()` on the web by throwing this on purpose; the app keeps running.
+        if (!String(error).includes("Using exceptions for control flow")) {
+          throw error;
+        }
+      }
+    }
+  </script>
+
+  <script>
+    const status = document.getElementById("status");
+    const canvas = document.getElementById("bevy");
+
+    // Hide the loading message once Bevy takes over the canvas (winit sets its size).
+    new MutationObserver((_records, observer) => {
+      status.hidden = true;
+      canvas.focus();
+      observer.disconnect();
+    }).observe(canvas, { attributes: true, attributeFilter: ["width", "height"] });
+
+    // Right-click is used in Bevy
+    document.addEventListener("contextmenu", (event) => event.preventDefault());
+
+    // Browsers only allow audio after a user interaction: resume any AudioContext
+    // on the first input. https://developer.chrome.com/blog/autoplay
+    (() => {
+      const contexts = [];
+      self.AudioContext = new Proxy(self.AudioContext, {
+        construct(target, args) {
+          const context = new target(...args);
+          contexts.push(context);
+          return context;
+        },
+      });
+      const resume = () => contexts.forEach((c) => c.state !== "running" && c.resume());
+      for (const name of ["pointerdown", "keydown", "touchend"]) {
+        document.addEventListener(name, resume);
+      }
+    })();
+  </script>
+</body>
+</html>
